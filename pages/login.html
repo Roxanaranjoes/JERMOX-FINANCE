@@ -1,0 +1,18 @@
+<div class="auth">
+    <img src="./pages/logo/Logo_jermox.png" alt="Logo-Jermox" class="auth__logo">
+    <h1 class="auth__title">Ingreso</h1>
+    <form class="auth__form" onsubmit="event.preventDefault(); login()">
+        <div class="auth__field">
+            <label class="auth__label" for="login-email">Email</label>
+            <input class="auth__input" type="email" id="login-email" placeholder="Email" required>
+        </div>
+        <div class="auth__field">
+            <label class="auth__label" for="login-password">Contraseña</label>
+            <input class="auth__input" type="password" id="login-password" placeholder="Contraseña" required>
+        </div>
+        <div class="auth__field auth__actions">
+            <button class="auth__btn auth__btn--primary" type="submit">Ingresar</button>
+        </div>
+    </form>
+    <a href="#" class="auth__switch" onclick="renderRegister()">¿No tienes cuenta? Regístrate</a>
+</div>

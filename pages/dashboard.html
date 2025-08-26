@@ -1,0 +1,20 @@
+<header class="dashboard">
+  <div class="dashboard__nav">
+    <h2 class="dashboard__welcome" id="welcome"></h2>
+    <button class="dashboard__logout" onclick="logout()">Cerrar Sesión</button>
+  </div>
+</header>
+
+<main class="dashboard__main">
+  <!-- Sidebar -->
+  <aside class="dashboard__sidebar">
+    <img src="./pages/logo/Logo_jermox.png" alt="Logo-Jermox" class="auth__logo">
+    <button class="dashboard__button">🏠 Home</button>
+    <button class="dashboard__button">📑 Declaración de impuestos</button>
+    <button class="dashboard__button">📊 Panel Tributario Avanzado</button>
+    <button class="dashboard__button">👤 Perfil del Usuario</button>
+  </aside>
+
+  <!-- Contenido dinámico -->
+  <div id="dashboard" class="dashboard__content"></div>
+</main>

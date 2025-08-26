@@ -1,0 +1,121 @@
+<!-- Perfil financiero -->
+<section class="perfil-financiero">
+    <div class="perfil-card">
+        <header class="perfil-header">
+            <h2>📋 Perfil financiero</h2>
+            <p class="perfil-sub">Completa tu perfil para recibir recomendaciones personalizadas</p>
+        </header>
+
+        <form id="perfilFinancieroForm" class="perfil-form">
+            <div class="form-grid">
+                <div class="form-row">
+                    <label for="ingresos">Ingresos mensuales</label>
+                    <input type="number" id="ingresos" name="ingresos" min="0" step="0.01" placeholder="0.00"
+                        required />
+                </div>
+
+                <div class="form-row">
+                    <label for="egresos">Egresos mensuales</label>
+                    <input type="number" id="egresos" name="egresos" min="0" step="0.01" placeholder="0.00" required />
+                </div>
+
+                <div class="form-row ahorro">
+                    <label for="ahorroRange">% que deseas ahorrar al mes</label>
+                    <div class="ahorro-control">
+                        <input type="range" id="ahorroRange" name="ahorroRange" min="0" max="100" value="10" />
+                        <input type="number" id="ahorroNumber" name="ahorroNumber" min="0" max="100" value="10" />
+                        <span class="percent">%</span>
+                    </div>
+                </div>
+
+                <fieldset class="card-fieldset objetivo">
+                    <legend>Objetivo financiero</legend>
+                    <div class="radios">
+                        <label><input type="radio" name="objetivo" value="ahorro_emergencia" checked /> Ahorrar para
+                            emergencia</label>
+                        <label><input type="radio" name="objetivo" value="comprar_vivienda" /> Comprar vivienda</label>
+                        <label><input type="radio" name="objetivo" value="invertir_largo" /> Invertir a largo
+                            plazo</label>
+                        <label><input type="radio" name="objetivo" value="reducir_deudas" /> Reducir deudas</label>
+                        <label><input type="radio" name="objetivo" value="educacion" /> Educación / formación</label>
+                        <label><input type="radio" name="objetivo" value="otro" /> Otro</label>
+                    </div>
+                    <input type="text" id="objetivo_otro" name="objetivo_otro" class="input-otro"
+                        placeholder="Describe tu objetivo" />
+                </fieldset>
+
+                <div class="form-row">
+                    <label for="horizonte">Horizonte de tiempo</label>
+                    <select id="horizonte" name="horizonte">
+                        <option value="corto">Corto plazo (0-2 años)</option>
+                        <option value="mediano">Mediano plazo (3-5 años)</option>
+                        <option value="largo">Largo plazo (más de 5 años)</option>
+                    </select>
+                </div>
+
+                <div class="form-row">
+                    <label for="riesgo">Tolerancia al riesgo</label>
+                    <select id="riesgo" name="riesgo">
+                        <option value="baja">Baja</option>
+                        <option value="media">Media</option>
+                        <option value="alta">Alta</option>
+                    </select>
+                </div>
+
+                <fieldset class="card-fieldset gastos">
+                    <legend>¿En qué gastas más?</legend>
+                    <div class="checkbox-grid">
+                        <label><input type="checkbox" name="gastos" value="vivienda" /> Vivienda</label>
+                        <label><input type="checkbox" name="gastos" value="transporte" /> Transporte</label>
+                        <label><input type="checkbox" name="gastos" value="alimentacion" /> Alimentación</label>
+                        <label><input type="checkbox" name="gastos" value="entretenimiento" /> Entretenimiento</label>
+                        <label><input type="checkbox" name="gastos" value="salud" /> Salud</label>
+                        <label><input type="checkbox" name="gastos" value="educacion" /> Educación</label>
+                        <label><input type="checkbox" name="gastos" value="otros" /> Otros</label>
+                    </div>
+                </fieldset>
+
+                <fieldset class="card-fieldset deudas">
+                    <legend>Deudas</legend>
+                    <div class="deuda-row">
+                        <label class="inline">¿Tienes deudas activas?</label>
+                        <label><input type="radio" name="tieneDeudas" value="no" checked /> No</label>
+                        <label><input type="radio" name="tieneDeudas" value="si" /> Sí</label>
+                    </div>
+
+                    <div id="deudas_detalle" class="deudas-detalle">
+                        <div class="form-row">
+                            <label for="deuda_monto">Monto aproximado</label>
+                            <input type="number" id="deuda_monto" name="deuda_monto" min="0" step="0.01"
+                                placeholder="0.00" />
+                        </div>
+                        <div class="form-row">
+                            <label for="deuda_tipo">Tipo de deuda</label>
+                            <select id="deuda_tipo" name="deuda_tipo">
+                                <option value="tarjeta">Tarjeta</option>
+                                <option value="prestamo">Préstamo</option>
+                                <option value="hipoteca">Hipoteca</option>
+                                <option value="otro">Otro</option>
+                            </select>
+                        </div>
+                    </div>
+                </fieldset>
+
+                <div class="form-row">
+                    <label for="preferencia_tips">Preferencia de tips</label>
+                    <select id="preferencia_tips" name="preferencia_tips">
+                        <option value="ahorro">Ahorro y control de gastos</option>
+                        <option value="inversion">Inversión y crecimiento de capital</option>
+                        <option value="tributario">Tributario / impuestos</option>
+                        <option value="educacion">Educación financiera</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" id="btn-guardar-perfil" class="btn-save">Guardar perfil</button>
+                <span id="saveStatus" class="save-status">Perfil guardado ✅</span>
+            </div>
+        </form>
+    </div>
+</section>
