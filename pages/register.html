@@ -1,0 +1,30 @@
+<div class="auth">
+    <div class="auth__panel">
+        <img src="./pages/logo/Logo_jermox.png" alt="Logo-Jermox" class="auth__logo">
+        <h1 class="auth__title">Registro</h1>
+        <form class="auth__form" onsubmit="event.preventDefault(); register()">
+            <div class="auth__field">
+                <label class="auth__label" for="register-email">Email</label>
+                <input class="auth__input" type="email" name="Email" id="register-email" placeholder="Email" required>
+            </div>
+            <div class="auth__field">
+                <label class="auth__label" for="register-password">Contraseña</label>
+                <input class="auth__input" type="password" name="password" id="register-password" placeholder="Contraseña" required>
+            </div>
+            <div class="auth__field">
+                <label class="auth__label" for="register-name">Nombre</label>
+                <input class="auth__input" type="text" name="name" id="register-name" placeholder="Tu nombre" required>
+            </div>
+            <div class="auth__field">
+                <label class="auth__label" for="register-birthday">Fecha de nacimiento</label>
+                <input class="auth__input" type="date" name="birthday" id="register-birthday" required>
+            </div>
+            <div class="auth__field auth__actions">
+                <button class="auth__btn auth__btn--primary" type="submit">Registrar</button>
+            </div>
+        </form>
+
+        <a href="#" class="auth__switch" onclick="renderLogin()">¿Ya tienes cuenta? Inicia sesión</a>
+
+    </div>
+</div>

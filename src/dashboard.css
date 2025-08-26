@@ -1,0 +1,308 @@
+/* --- NAVBAR --- */
+.dashboard__nav {
+  background: linear-gradient(135deg, #1f2228, #2a2d35);
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
+  color: #fff;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+/* --- Layout principal --- */
+.dashboard__main {
+  display: flex;
+  min-height: 100vh;
+  background: #121418;
+  color: #fff;
+}
+
+/* --- Botón logout --- */
+.dashboard__logout {
+  padding: 10px 16px;
+  background: linear-gradient(135deg, #007bff, #0056b3);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.3s;
+}
+
+.dashboard__logout:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(0, 123, 255, 0.35);
+}
+
+/* --- Sidebar --- */
+.dashboard__sidebar {
+  background: rgba(20, 22, 27, 0.95);
+  backdrop-filter: blur(6px);
+  padding: 1.2rem;
+  display: flex;
+  flex-direction: column;
+  width: 240px;
+  box-shadow: 2px 0 15px rgba(0, 0, 0, 0.3);
+  border-right: 1px solid rgba(255, 255, 255, 0.05);
+  gap: 1rem;
+  height: 100vh;
+  position: sticky;
+  top: 0;
+  left: 0;
+  z-index: 200;
+  animation: slideIn 0.4s ease-in-out;
+}
+
+@keyframes slideIn {
+  from { transform: translateX(-15px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+/* --- Contenido principal --- */
+.dashboard__content {
+  flex: 1;
+  padding: 2rem;
+  background: #121418;
+  color: #f1f1f1;
+}
+
+/* --- Botones en sidebar --- */
+.dashboard__button {
+  padding: 12px;
+  background: #1f2228;
+  color: #f5f5f5;
+  border: none;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s, transform 0.2s;
+  text-align: left;
+}
+
+.dashboard__button:hover {
+  background: #004a98;
+  transform: translateX(4px);
+}
+
+/* --- Perfil financiero --- */
+.perfil-financiero {
+  background: #1a1c22;
+  border-radius: 18px;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.35);
+  margin: 0 auto;
+  padding: 1.5rem;
+  margin-left: 10%;
+  margin-right: 10%;
+  color: #fff;
+  animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+option {
+  background-color: #fff;
+  color: #000;
+}
+
+/* --- Perfil card --- */
+.perfil-card {
+  background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));
+  border: 1px solid rgba(255,255,255,0.06);
+  padding: 1.8rem;
+  border-radius: 14px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.45);
+  transition: transform 0.2s;
+}
+
+.perfil-card:hover {
+  transform: translateY(-4px);
+}
+
+.perfil-header h2 { 
+  margin: 0 0 6px 0; 
+}
+
+.perfil-sub { 
+  color: #b8c1cc; 
+  margin: 0 0 14px 0; 
+}
+
+/* --- Formularios perfil --- */
+.perfil-form .form-grid { 
+  display: grid; 
+  grid-template-columns: 1fr 1fr; 
+  gap: 14px; 
+}
+
+.perfil-form .form-row { 
+  display:flex; 
+  flex-direction:column; 
+}
+
+.perfil-form label { 
+  font-size: 14px; 
+  color: #e6eef8; 
+  margin-bottom:6px; 
+}
+
+.perfil-form input[type="number"], 
+.perfil-form input[type="text"], 
+.perfil-form select {
+  padding: 10px 12px; 
+  border-radius: 8px; 
+  border: 1px solid rgba(255,255,255,0.08); 
+  background: rgba(255,255,255,0.05); 
+  color: #fff;
+}
+
+.perfil-form input[type="range"] { width:100%; }
+
+.ahorro-control { display:flex; gap:8px; align-items:center; }
+.ahorro-control .percent { color:#e6eef8; }
+
+.card-fieldset { 
+  grid-column: 1 / -1; 
+  border: 1px solid rgba(255,255,255,0.08); 
+  padding: 12px; 
+  border-radius:10px; 
+}
+.card-fieldset legend { padding:0 6px; font-weight:600; }
+
+.radios, .checkbox-grid { 
+  display:flex; 
+  flex-wrap:wrap; 
+  gap:10px; 
+}
+
+.checkbox-grid label, .radios label { 
+  background: rgba(255,255,255,0.04); 
+  padding:6px 8px; 
+  border-radius:6px; 
+  cursor:pointer; 
+  transition: background 0.3s;
+}
+
+.checkbox-grid label:hover, 
+.radios label:hover { 
+  background: rgba(255,255,255,0.08); 
+}
+
+.input-otro { 
+  display:block; 
+  margin-top:8px; 
+  padding:8px; 
+  border-radius:6px; 
+  width:100%; 
+}
+
+.deudas-detalle { 
+  display:none; 
+  margin-top:8px; 
+  grid-column: 1 / -1; 
+}
+
+.deuda-row { 
+  display:flex; 
+  gap:12px; 
+  align-items:center; 
+}
+
+/* --- Acciones del formulario --- */
+.form-actions { 
+  margin-top:14px; 
+  display:flex; 
+  align-items:center; 
+  gap:12px; 
+}
+
+.btn-save { 
+  background: linear-gradient(135deg, #007bff, #0056b3); 
+  color:#fff; 
+  padding:10px 14px; 
+  border-radius:8px; 
+  border:none; 
+  font-weight:600; 
+  cursor:pointer; 
+  transition: transform 0.2s, box-shadow 0.3s;
+}
+
+.btn-save:hover { 
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(0, 123, 255, 0.35);
+}
+
+.save-status { 
+  color:#7ed957; 
+  display:none; 
+}
+
+/* --- Responsive --- */
+@media (max-width: 900px) {
+  .dashboard__sidebar { width: 200px; }
+  .perfil-form .form-grid { grid-template-columns: 1fr; }
+  .perfil-card { padding: 1rem; }
+}
+
+/* --- Home page styles --- */
+.home {
+  padding: 2rem;
+  color: #ffffff;
+}
+
+.home__welcome {
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.home__welcome h2 {
+  font-size: 1.8rem;
+  margin-bottom: 0.5rem;
+  color: #ffffff;
+}
+
+.home__welcome p {
+  font-size: 1rem;
+  color: #a2a0a0;
+}
+
+.home__cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+}
+
+.home__card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.home__card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
+}
+
+.home__card h3 {
+  margin-bottom: 0.5rem;
+  color: #2c3e50;
+}
+
+.home__card p {
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+  color: #666;
+}
+
