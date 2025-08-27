@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const pool = require('../db');
-const { checkExists } = require('../middlewares/checkExists');
+const { checkExists } = require('../middlewares');
 
 // ✅ GET: todos los gastos
 router.get('/', async (req, res) => {

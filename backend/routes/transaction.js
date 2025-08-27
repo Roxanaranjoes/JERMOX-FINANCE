@@ -5,7 +5,7 @@ const { checkExists, checkReferenceExists } = require('../middlewares');
 
 // ✅ GET: todas las transacciones
 router.get('/', async (req, res) => {
-  try {
+  try {middlewares
     const { rows } = await pool.query(
       'SELECT * FROM transaction ORDER BY transaction_id DESC'
     );

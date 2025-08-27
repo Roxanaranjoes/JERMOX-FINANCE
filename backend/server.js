@@ -38,7 +38,35 @@ app.get('/health/db', async (req, res) => {
   }
 });
 
+// Ruta básica
+app.get('/', (req, res) => {
+  res.json({ 
+    message: 'Servidor Jermox funcionando correctamente',
+    version: '1.0.0',
+    database: 'Supabase'
+  });
+});
+
+// Ruta de prueba de conexión
+app.get('/test-connection', async (req, res) => {
+  try {
+    await testConnection();
+    res.json({ 
+      message: 'Conexión a Supabase establecida correctamente',
+      status: 'success'
+    });
+  } catch (error) {
+    res.status(500).json({ 
+      message: 'Error al conectar con Supabase',
+      error: error.message,
+      status: 'error'
+    });
+  }
+});
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`🚀 Servidor corriendo en puerto ${PORT}`);
+  console.log(`Servidor ejecutándose en http://localhost:${PORT}`);
+  console.log('Para probar la conexión visita: http://localhost:3000/test-connection');
 });
