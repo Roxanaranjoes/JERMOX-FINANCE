@@ -33,7 +33,6 @@ body {
   box-shadow: 0 12px 25px rgba(0, 0, 0, 0.4);
   z-index: 1000;
   text-align: center;
-  animation: fadeIn 0.4s ease-in-out;
 }
 
 /* --- Animación de entrada --- */
