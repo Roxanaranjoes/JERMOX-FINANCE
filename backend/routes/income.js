@@ -116,3 +116,6 @@ router.delete(
     }
   }
 );
+
+module.exports = router;
+
