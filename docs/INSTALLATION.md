@@ -10,6 +10,17 @@ cp env.example .env
 npm install
 ## Requisitos Previos
 
+intalar dependencias de jsonwebtoken y bcrypt
+
+npm install bcrypt
+
+npm install jsonwebtoken
+# luego instalar el node
+
+node server.js
+
+
+
 3. Crear las tablas
 Ve al SQL Editor de Supabase
 Ejecuta el SQL que está en config/database.js (función createTables())

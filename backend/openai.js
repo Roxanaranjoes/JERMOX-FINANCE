@@ -11,7 +11,7 @@ function getClient() {
     client = new OpenAI({
       apiKey: process.env.OPENAI_API_KEY,
     });
-    console.log("✅ Cliente de OpenAI inicializado");
+    console.log("Cliente de OpenAI inicializado");
   }
   return client;
 }
@@ -26,9 +26,9 @@ async function testOpenAIConnection() {
       max_tokens: 50,
     });
 
-    console.log("✅ Conexión con OpenAI exitosa:", response.choices[0].message.content);
+    console.log("Conexión con OpenAI exitosa:", response.choices[0].message.content);
   } catch (error) {
-    console.error("❌ Error en conexión con OpenAI:", error.message);
+    console.error(" Error en conexión con OpenAI:", error.message);
   }
 }
 
@@ -42,13 +42,13 @@ async function getPerfilFinanciero(usuario_ID) {
       .single();
 
     if (error) {
-      console.error("❌ Error al obtener perfil financiero:", error.message);
+      console.error(" Error al obtener perfil financiero:", error.message);
       return null;
     }
 
     return data;
   } catch (err) {
-    console.error("❌ Error inesperado:", err.message);
+    console.error(" Error inesperado:", err.message);
     return null;
   }
 }
@@ -96,7 +96,7 @@ Responde en formato de lista con recomendaciones claras.
 
     return tips;
   } catch (error) {
-    console.error("❌ Error al generar tips:", error.message);
+    console.error(" Error al generar tips:", error.message);
     return ["No se pudieron generar tips financieros en este momento."];
   }
 }
