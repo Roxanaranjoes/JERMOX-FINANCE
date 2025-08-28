@@ -34,7 +34,7 @@ router.get(
 );
 
 // ✅ POST: crear un nuevo ingreso (valida que el usuario exista)
-rrouter.post(
+router.post(
   '/',
   checkExists('user_account', 'user_id', 'body', 'user_id'),
   async (req, res) => {
