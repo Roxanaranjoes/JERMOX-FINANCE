@@ -2,9 +2,11 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const pool = require('./db');
+const bodyParser = require("body-parser");
 
 const app = express();
 app.use(cors());
+app.use(bodyParser.json());
 app.use(express.json());
 
 // Rutas
@@ -70,3 +72,10 @@ app.listen(PORT, () => {
   console.log(`Servidor ejecutándose en http://localhost:${PORT}`);
   console.log('Para probar la conexión visita: http://localhost:3000/test-connection');
 });
+
+const userAccountsRoutes = require("./routes/userAccounts");
+
+
+// Rutas API
+app.use("/api/users", userAccountsRoutes);
+app.listen(PORT, () => console.log(`Servidor en http://localhost:${PORT}`));

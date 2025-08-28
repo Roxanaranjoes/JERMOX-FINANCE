@@ -1,6 +1,102 @@
 const express = require('express');
 const router = express.Router();
 const pool = require('../db');
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+
+// validacion y incriptacion de datos
+
+const SECRET_KEY = process.env.SECRET_KEY || "clave_super_secreta"; 
+
+// Registro
+router.post("/register", async (req, res) => {
+  const { nombre, email, telefono, password } = req.body;
+
+  try {
+    // 1. Verificar si ya existe
+    const { data: existingUser } = await supabase
+      .from("user_account")
+      .select("id")
+      .eq("email", email)
+      .single();
+
+    if (existingUser) {
+      return res.status(400).json({ msg: "El usuario ya existe" });
+    }
+
+    // 2. Hash password
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // 3. Insertar
+    const { error: insertError } = await supabase
+      .from("user_account")
+      .insert([{ nombre, email, telefono, password: hashedPassword }]);
+
+    if (insertError) throw insertError;
+
+    res.json({ msg: "Usuario registrado correctamente" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ msg: "Error en el servidor", error: err.message });
+  }
+});
+
+// Login
+router.post("/login", async (req, res) => {
+  const { email, password } = req.body;
+
+  try {
+    // 1. Buscar usuario
+    const { data: user, error } = await supabase
+      .from("user_account")
+      .select("*")
+      .eq("email", email)
+      .single();
+
+    if (!user) return res.status(400).json({ msg: "Usuario no encontrado" });
+
+    // 2. Validar password
+    const validPassword = await bcrypt.compare(password, user.password);
+    if (!validPassword) return res.status(400).json({ msg: "Contraseña incorrecta" });
+
+    // 3. Crear token
+    const token = jwt.sign(
+      { id: user.id, email: user.email },
+      SECRET_KEY,
+      { expiresIn: "1h" }
+    );
+
+    res.json({
+      msg: "Login exitoso",
+      token,
+      user: {
+        id: user.id,
+        nombre: user.nombre,
+        email: user.email,
+        telefono: user.telefono
+      }
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ msg: "Error en el servidor", error: err.message });
+  }
+});
+
+// Listar usuarios (ocultando password)
+router.get("/", async (req, res) => {
+  try {
+    const { data: users, error } = await supabase
+      .from("user_account")
+      .select("id, nombre, email, telefono");
+
+    if (error) throw error;
+
+    res.json(users);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ msg: "Error en el servidor", error: err.message });
+  }
+});
 
 // GET: todos los usuarios
 router.get('/', async (req, res) => {
