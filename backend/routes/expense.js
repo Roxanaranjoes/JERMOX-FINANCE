@@ -7,13 +7,13 @@ const { checkExists } = require('../middlewares');
 router.get('/', async (req, res) => {
   try {
     const { rows } = await pool.query('SELECT * FROM expense ORDER BY expense_id');
-    res.json(rows);
+    res.json(rows); 
   } catch (err) {
     console.error('Error al obtener gastos:', err);
     res.status(500).json({ error: err.message });
   }
 });
-
+   
 // ✅ GET: gastos de un usuario específico (valida que el usuario exista)
 router.get(
   '/user/:userId',

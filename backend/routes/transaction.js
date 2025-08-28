@@ -5,7 +5,7 @@ const { checkExists, checkReferenceExists } = require('../middlewares');
 
 // ✅ GET: todas las transacciones
 router.get('/', async (req, res) => {
-  try {middlewares
+  try {
     const { rows } = await pool.query(
       'SELECT * FROM transaction ORDER BY transaction_id DESC'
     );
@@ -45,14 +45,47 @@ router.post(
 
     try {
       const { rows } = await pool.query(
-        `INSERT INTO transaction (user_id, type, reference_id, created_at)
-         VALUES ($1, $2, $3, NOW())
+        `INSERT INTO transaction (user_id, type, reference_id, created_at, updated_at)
+         VALUES ($1, $2, $3, NOW(), NOW())
          RETURNING *`,
         [user_id, type, reference_id]
       );
       res.status(201).json(rows[0]);
     } catch (err) {
       console.error('Error al crear transacción:', err);
+      res.status(500).json({ error: err.message });
+    }
+  }
+);
+
+router.put(
+  '/:id', 
+  checkExists('transaction', 'transaction_id', 'params', 'id'), 
+  checkExists('user_account', 'user_id', 'body', 'user_id'),    
+  checkReferenceExists,                                         
+  async (req, res) => {
+    const { id } = req.params;
+    const { user_id, type, reference_id } = req.body;
+
+    try {
+      const { rows } = await pool.query(
+        `UPDATE transaction
+         SET user_id = $1,
+             type = $2,
+             reference_id = $3,
+             updated_at = NOW()
+         WHERE transaction_id = $4
+         RETURNING *`,
+        [user_id, type, reference_id, id]
+      );
+
+      if (rows.length === 0) {
+        return res.status(404).json({ error: 'Transacción no encontrada' });
+      }
+
+      res.json(rows[0]);
+    } catch (err) {
+      console.error('Error al actualizar transacción:', err);
       res.status(500).json({ error: err.message });
     }
   }

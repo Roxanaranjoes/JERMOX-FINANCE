@@ -7,7 +7,7 @@ const { checkExists } = require('../middlewares');
 router.get('/', async (req, res) => {
   try {
     const { rows } = await pool.query(
-      'SELECT * FROM tax_info ORDER BY tax_info_id DESC'
+      'SELECT * FROM tax_info ORDER BY tax_id DESC'
     );
     res.json(rows);
   } catch (err) {
@@ -43,13 +43,13 @@ router.post(
   '/',
   checkExists('user_account', 'user_id', 'body', 'user_id'),
   async (req, res) => {
-    const { user_id, gross_income, taxable_income, tax_paid } = req.body;
+    const { user_id, gross_assets, total_income, total_expense } = req.body;
     try {
       const { rows } = await pool.query(
-        `INSERT INTO tax_info (user_id, gross_income, taxable_income, tax_paid, created_at, updated_at)
+        `INSERT INTO tax_info (user_id, gross_assets, total_income, total_expense, created_at, updated_at)
          VALUES ($1, $2, $3, $4, NOW(), NOW())
          RETURNING *`,
-        [user_id, gross_income, taxable_income, tax_paid]
+        [user_id, gross_assets, total_income, total_expense]
       );
       res.status(201).json(rows[0]);
     } catch (err) {
@@ -62,20 +62,20 @@ router.post(
 // ✅ PUT: actualizar registro de impuestos
 router.put(
   '/:id',
-  checkExists('tax_info', 'tax_info_id', 'params', 'id'),
+  checkExists('tax_info', 'tax_id', 'params', 'id'),
   async (req, res) => {
     const { id } = req.params;
-    const { gross_income, taxable_income, tax_paid } = req.body;
+    const { gross_assets, total_income, total_expense } = req.body;
     try {
       const { rows } = await pool.query(
         `UPDATE tax_info
-         SET gross_income = $1,
-             taxable_income = $2,
-             tax_paid = $3,
+         SET gross_assets = $1,
+             total_income = $2,
+             total_expense = $3,
              updated_at = NOW()
-         WHERE tax_info_id = $4
+         WHERE tax_id = $4
          RETURNING *`,
-        [gross_income, taxable_income, tax_paid, id]
+        [gross_assets, total_income, total_expense, id]
       );
       res.json(rows[0]);
     } catch (err) {
@@ -88,12 +88,12 @@ router.put(
 // ✅ DELETE: eliminar registro de impuestos
 router.delete(
   '/:id',
-  checkExists('tax_info', 'tax_info_id', 'params', 'id'),
+  checkExists('tax_info', 'tax_id', 'params', 'id'),
   async (req, res) => {
     const { id } = req.params;
     try {
       const { rowCount } = await pool.query(
-        'DELETE FROM tax_info WHERE tax_info_id = $1',
+        'DELETE FROM tax_info WHERE tax_id = $1',
         [id]
       );
       if (rowCount === 0) {
