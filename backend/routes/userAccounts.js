@@ -131,18 +131,30 @@ router.get('/:id', async (req, res) => {
 
 // POST: crear usuario
 router.post('/', async (req, res) => {
-  const { first_name, last_name, occupation, phone, password } = req.body;
+  const { first_name, last_name, email, age, occupation, phone, password, is_active } = req.body;
 
-  if (!first_name || !last_name || !password) {
-    return res.status(400).json({ error: 'first_name, last_name y password son obligatorios' });
+  // Validaciones mínimas
+  if (!first_name || !last_name || !email || !password) {
+    return res.status(400).json({ error: 'first_name, last_name, email y password son obligatorios' });
   }
 
   try {
     const { rows } = await pool.query(
-      `INSERT INTO user_account (first_name, last_name, occupation, phone, password, created_at, updated_at)
-       VALUES ($1, $2, $3, $4, $5, NOW(), NOW())
+      `INSERT INTO user_account 
+        (first_name, last_name, email, age, occupation, phone, password, is_active, created_at, updated_at)
+       VALUES 
+        ($1, $2, $3, $4, $5, $6, $7, $8, NOW(), NOW())
        RETURNING *`,
-      [first_name, last_name, occupation || null, phone || null, password]
+      [
+        first_name,
+        last_name,
+        email,
+        age || null,
+        occupation || null,
+        phone || null,
+        password,
+        is_active ?? true // por defecto activo
+      ]
     );
     res.status(201).json(rows[0]);
   } catch (err) {
@@ -154,20 +166,33 @@ router.post('/', async (req, res) => {
 // PUT: actualizar usuario
 router.put('/:id', async (req, res) => {
   const { id } = req.params;
-  const { first_name, last_name, occupation, phone, password } = req.body;
+  const { first_name, last_name, email, age, occupation, phone, password, is_active } = req.body;
 
   try {
     const { rows } = await pool.query(
       `UPDATE user_account
        SET first_name = $1,
            last_name = $2,
-           occupation = $3,
-           phone = $4,
-           password = $5,
+           email = $3,
+           age = $4,
+           occupation = $5,
+           phone = $6,
+           password = $7,
+           is_active = $8,
            updated_at = NOW()
-       WHERE user_id = $6
+       WHERE user_id = $9
        RETURNING *`,
-      [first_name, last_name, occupation || null, phone || null, password, id]
+      [
+        first_name || null,
+        last_name || null,
+        email || null,
+        age || null,
+        occupation || null,
+        phone || null,
+        password || null,
+        is_active ?? true,
+        id
+      ]
     );
 
     if (rows.length === 0) {

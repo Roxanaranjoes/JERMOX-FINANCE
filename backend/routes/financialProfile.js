@@ -40,17 +40,20 @@ router.get(
 
 // ✅ POST: crear perfil financiero
 router.post(
-  ' /',
+  '/',
   checkExists('user_account', 'user_id', 'body', 'user_id'),
   async (req, res) => {
-    const { user_id, income, expenses, savings, risk_tolerance } = req.body;
+    const { user_id, monthly_income, monthly_expense, savings_percentage, goal, time_horizon, risk_tolerance, biggest_expense, has_debt, debt_amount, debt_type, tips_preference } = req.body;
     try {
       const { rows } = await pool.query(
-        `INSERT INTO financial_profile (user_id, income, expenses, savings, risk_tolerance)
-         VALUES ($1, $2, $3, $4, $5)
+        `INSERT INTO financial_profile (user_id, monthly_income, monthly_expense, savings_percentage, goal, time_horizon, risk_tolerance, biggest_expense, has_debt, debt_amount, debt_type, tips_preference)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
          RETURNING *`,
-        [user_id, income, expenses, savings || 0, risk_tolerance]
+        [user_id, monthly_income, monthly_expense, savings_percentage || 0, goal, time_horizon, risk_tolerance, biggest_expense, has_debt, debt_amount, debt_type, tips_preference]
       );
+      if (rows.length === 0) {
+        return res.status(404).json({ error: 'Perfil financiero no encontrado' });
+      }
       res.status(201).json(rows[0]);
     } catch (err) {
       console.error('Error al crear perfil financiero:', err);
@@ -65,15 +68,29 @@ router.put(
   checkExists('financial_profile', 'profile_id', 'params', 'id'),
   async (req, res) => {
     const { id } = req.params;
-    const { income, expenses, savings, risk_tolerance } = req.body;
+    const { user_id, monthly_income, monthly_expense, savings_percentage, goal, time_horizon, risk_tolerance, biggest_expense, has_debt, debt_amount, debt_type, tips_preference } = req.body;
     try {
       const { rows } = await pool.query(
         `UPDATE financial_profile
-         SET income = $1, expenses = $2, savings = $3, risk_tolerance = $4, updated_at = NOW()
-         WHERE profile_id = $5
+         SET user_id = $1, 
+         monthly_income = $2, 
+         monthly_expense = $3, 
+         savings_percentage = $4, 
+         goal = $5, 
+         time_horizon = $6, 
+         risk_tolerance = $7, 
+         biggest_expense = $8, 
+         has_debt = $9, 
+         debt_amount = $10, 
+         debt_type = $11, 
+         tips_preference = $12 
+         WHERE profile_id = $13
          RETURNING *`,
-        [income, expenses, savings, risk_tolerance, id]
+        [user_id, monthly_income, monthly_expense, savings_percentage, goal, time_horizon, risk_tolerance, biggest_expense, has_debt, debt_amount, debt_type, tips_preference, id]
       );
+      if (rows.length === 0) {
+        return res.status(404).json({ error: 'Perfil financiero no encontrado' });
+      }
       res.json(rows[0]);
     } catch (err) {
       console.error('Error al actualizar perfil financiero:', err);

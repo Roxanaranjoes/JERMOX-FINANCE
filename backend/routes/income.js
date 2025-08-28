@@ -34,22 +34,22 @@ router.get(
 );
 
 // ✅ POST: crear un nuevo ingreso (valida que el usuario exista)
-router.post(
+rrouter.post(
   '/',
   checkExists('user_account', 'user_id', 'body', 'user_id'),
   async (req, res) => {
-    const { user_id, category, type, amount } = req.body;
+    const { user_id, type, amount, category } = req.body;
 
-    if (!category || !type || !amount) {
-      return res.status(400).json({ error: 'category, type y amount son obligatorios' });
+    if (!type || !category || amount === undefined) {
+      return res.status(400).json({ error: 'type, category y amount son obligatorios' });
     }
 
     try {
       const { rows } = await pool.query(
-        `INSERT INTO income (user_id, category, type, amount, created_at, updated_at)
+        `INSERT INTO income (user_id, type, amount, category, created_at, updated_at)
          VALUES ($1, $2, $3, $4, NOW(), NOW())
          RETURNING *`,
-        [user_id, category, type, amount]
+        [user_id, type, amount, category]
       );
       res.status(201).json(rows[0]);
     } catch (err) {
@@ -59,25 +59,25 @@ router.post(
   }
 );
 
-// ✅ PUT: actualizar un ingreso (valida que el usuario exista si se envía user_id)
+// ✅ PUT: actualizar ingreso
 router.put(
   '/:id',
-  checkExists('user_account', 'user_id', 'body', 'user_id'),
+  checkExists('income', 'income_id', 'params', 'id'), // valida que el ingreso exista
   async (req, res) => {
     const { id } = req.params;
-    const { user_id, category, type, amount } = req.body;
+    const { user_id, type, amount, category } = req.body;
 
     try {
       const { rows } = await pool.query(
         `UPDATE income
-         SET user_id = $1,
-             category = $2,
-             type = $3,
-             amount = $4,
+         SET user_id = COALESCE($1, user_id),
+             type = COALESCE($2, type),
+             amount = COALESCE($3, amount),
+             category = COALESCE($4, category),
              updated_at = NOW()
          WHERE income_id = $5
          RETURNING *`,
-        [user_id, category, type, amount, id]
+        [user_id, type, amount, category, id]
       );
 
       if (rows.length === 0) {
@@ -92,27 +92,27 @@ router.put(
   }
 );
 
-// ✅ DELETE: eliminar un ingreso (no necesita validar user_id, pero sí existencia del ingreso)
-router.delete('/:id', 
-    checkExists('user_account', 'user_id', 'body', 'user_id'),
-    async (req, res) => {
-  const { id } = req.params;
+// ✅ DELETE: eliminar ingreso
+router.delete(
+  '/:id',
+  checkExists('income', 'income_id', 'params', 'id'),
+  async (req, res) => {
+    const { id } = req.params;
 
-  try {
-    const { rowCount } = await pool.query(
-      'DELETE FROM income WHERE income_id = $1',
-      [id]
-    );
+    try {
+      const { rowCount } = await pool.query(
+        'DELETE FROM income WHERE income_id = $1',
+        [id]
+      );
 
-    if (rowCount === 0) {
-      return res.status(404).json({ error: 'Ingreso no encontrado' });
+      if (rowCount === 0) {
+        return res.status(404).json({ error: 'Ingreso no encontrado' });
+      }
+
+      res.json({ message: 'Ingreso eliminado correctamente' });
+    } catch (err) {
+      console.error('Error al eliminar ingreso:', err);
+      res.status(500).json({ error: err.message });
     }
-
-    res.json({ message: 'Ingreso eliminado correctamente' });
-  } catch (err) {
-    console.error('Error al eliminar ingreso:', err);
-    res.status(500).json({ error: err.message });
   }
-});
-
-module.exports = router;
+);
