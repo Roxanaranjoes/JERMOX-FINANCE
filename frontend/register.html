@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Registro • JERMOX</title>
+  <link rel="stylesheet" href="./src/styles.css">
+</head>
+
+<body>
+  <nav class="nav">
+    <div class="brand">
+      <div class="brand-badge"></div>
+      <div>JERMOX FINANCE</div>
+    </div>
+    <div style="text-align:center;margin-top:16px;opacity:.8">
+      <span>¿Ya tienes cuenta? <a href="login.html" class="link">Inicia sesión</a></span>
+    </div>
+    <div><a class="btn ghost" href="index.html">← Volver</a></div>
+  </nav>
+  <main class="section" style="max-width:900px">
+    <div class="card auth-card">
+      <h2>Crear cuenta</h2>
+      <p class="auth-intro">Te tomará menos de 2 minutos. Empezamos con tus datos y un perfil financiero básico para personalizarte tips.</p>
+      <form id="formRegister" class="form">
+        <h3 style="margin:6px 0">Datos personales</h3>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+          <input id="first_name" class="input" placeholder="Nombre" required />
+          <input id="last_name" class="input" placeholder="Apellido" required />
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+          <input id="reg_email" type="email" class="input" placeholder="Correo" required />
+          <input id="phone" class="input" placeholder="Teléfono (opcional)" />
+        </div>
+        <div style="display:flex; gap:8px; align-items:center">
+          <input id="reg_password" type="password" class="input" placeholder="Contraseña" required />
+          <button type="button" class="btn secondary" id="toggleRegPwd" title="Mostrar/ocultar">👁</button>
+        </div>
+
+        <h3 style="margin-top:16px">Perfil financiero</h3>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+          <input id="monthly_income" type="number" class="input" placeholder="Ingresos mensuales" required />
+          <input id="monthly_expense" type="number" class="input" placeholder="Egresos mensuales" required />
+        </div>
+        <label>Porcentaje a ahorrar: <span id="spShow">10%</span></label>
+        <input id="savings_percentage" type="range" min="0" max="80" value="10" class="slider"
+        />
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+          <select id="goal" class="input" required>
+            <option value="">Objetivo principal</option>
+            <option value="1">Ahorrar para emergencia</option>
+            <option value="2">Comprar vivienda</option>
+            <option value="3">Invertir a largo plazo</option>
+            <option value="4">Reducir deudas</option>
+            <option value="5">Educación / formación</option>
+            <option value="6">Otro</option>
+          </select>
+          <select id="time_horizon" class="input" required>
+            <option value="">Horizonte de tiempo</option>
+            <option value="1">Corto plazo (0-2 años)</option>
+            <option value="2">Mediano plazo (3-5 años)</option>
+            <option value="3">Largo plazo (más de 5 años)</option>
+          </select>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+          <select id="risk_tolerance" class="input" required>
+            <option value="">Tolerancia al riesgo</option>
+            <option value="1">Baja</option>
+            <option value="2">Media</option>
+            <option value="3">Alta</option>
+          </select>
+          <input id="biggest_expense" class="input" placeholder="¿En qué gastas más? (ej: vivienda)" />
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px">
+          <select id="has_debt" class="input" required>
+            <option value="">¿Tienes deudas?</option>
+            <option value="false">No</option>
+            <option value="true">Sí</option>
+          </select>
+          <input id="debt_amount" type="number" class="input" placeholder="Monto deuda (si aplica)" />
+          <input id="debt_type" class="input" placeholder="Tipo deuda (tarjeta, préstamo...)" />
+        </div>
+
+        <select id="tips_preference" class="input" required>
+          <option value="">Preferencia de tips</option>
+          <option value="1">Ahorro y control de gastos</option>
+          <option value="2">Inversión y crecimiento de capital</option>
+          <option value="3">Tributario / impuestos</option>
+          <option value="4">Educación financiera</option>
+        </select>
+
+        <div class="auth-actions">
+          <button class="btn" type="submit">Crear cuenta</button>
+          <small class="auth-help">Podrás editar tu perfil luego en el Dashboard.</small>
+        </div>
+      </form>
+    </div>
+  </main>
+  <script type="module" src="/src/auth.js"></script>
+  <script type="module">
+    const spInput = document.getElementById('savings_percentage');
+    const spShow = document.getElementById('spShow');
+    if (spInput && spShow) {
+      spInput.addEventListener('input', () => {
+        spShow.innerText = spInput.value + '%';
+      });
+    }
+  </script>
+  <script>
+    const tr = document.getElementById('toggleRegPwd');
+    const pr = document.getElementById('reg_password');
+    if (tr && pr) tr.addEventListener('click', ()=>{ pr.type = pr.type === 'password' ? 'text' : 'password'; });
+  </script>
+</body>
+
+</html>

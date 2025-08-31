@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard • JERMOX</title>
+    <link rel="stylesheet" href="./src/styles.css" />
+  </head>
+  <body class="dashboard-page">
+    <!-- Preloader overlay -->
+    <div id="preloader" aria-busy="true" aria-live="polite">
+      <div class="preloader-box">
+        <img src="./src/Logo_jermox.png" alt="Jermox" class="preloader-logo" />
+        <div class="preloader-spinner"></div>
+        <div class="preloader-text">Cargando tu panel…</div>
+      </div>
+    </div>
+    <div class="dashboard-nav">
+      <div class="brand">
+        <img src="src/Logo_jermox.png" alt="Jermox Logo" class="brand-badge" />
+        <div>JERMOX FINANCE</div>
+      </div>
+      <div style="display: flex; gap: 8px; align-items: center">
+        <span>Hola, <strong id="userName">Usuario</strong></span
+        ><a class="btn ghost" href="index.html">Home</a
+        ><button id="logout" class="btn secondary">Salir</button>
+      </div>
+    </div>
+    <main class="section">
+      <div
+        class="card"
+        style="
+          margin-bottom: 16px;
+          display: flex;
+          gap: 12px;
+          align-items: center;
+          flex-wrap: wrap;
+          justify-content: space-between;
+        "
+      >
+        <div style="display:flex; gap:12px; align-items:center; flex-wrap:wrap">
+          <h2 style="margin: 0; font-size: 18px">Filtro de período</h2>
+          <input
+            id="filter_month"
+            type="month"
+            class="input"
+            style="max-width: 220px"
+          />
+          <button id="applyFilter" class="btn secondary" type="button">
+            Aplicar
+          </button>
+          <button id="clearFilter" class="btn ghost" type="button">
+            Quitar filtro
+          </button>
+          <small style="opacity: 0.8">Aplica a KPIs, tabla y gráficas.</small>
+        </div>
+        <div>
+          <span class="pill date-pill" id="currentDatePill" aria-live="polite">📅</span>
+        </div>
+      </div>
+      <div class="cards">
+        <div class="card stat">
+          <div class="kpi" id="kpiIncome">$0</div>
+          <div class="kpi-label">Ingresos</div>
+        </div>
+        <div class="card stat">
+          <div class="kpi" id="kpiExpense">$0</div>
+          <div class="kpi-label">Egresos</div>
+        </div>
+        <div class="card stat">
+          <div class="kpi" id="kpiBalance">$0</div>
+          <div class="kpi-label">Balance mensual</div>
+        </div>
+      </div>
+
+      <div
+        style="
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 16px;
+          margin-bottom: 16px;
+        "
+      >
+        <div class="card chart-card">
+          <div class="chart-header">
+            <h2>Distribución de gastos</h2>
+            <button
+              class="info-btn"
+              data-modal="modal-donut"
+              title="¿Cómo funciona?"
+            >
+              ⓘ
+            </button>
+          </div>
+          <div class="chart-wrap donut"><canvas id="donut"></canvas></div>
+        </div>
+        <div class="card chart-card">
+          <div class="chart-header">
+            <h2>Gasto vs Presupuesto</h2>
+            <button
+              class="info-btn"
+              data-modal="modal-gauge"
+              title="¿Cómo funciona?"
+            >
+              ⓘ
+            </button>
+          </div>
+          <div class="chart-wrap gauge"><canvas id="gauge"></canvas></div>
+          <div class="gauge-controls">
+            <label
+              >Modo:
+              <select id="budget_mode" class="input small">
+                <option value="fixed">Presupuesto fijo</option>
+                <option value="saving">Ahorro objetivo</option>
+              </select>
+            </label>
+            <label class="check"
+              ><input type="checkbox" id="budget_prorata" /> Proporcional al
+              día</label
+            >
+            <button id="applyGauge" class="btn secondary" type="button">
+              Aplicar
+            </button>
+          </div>
+          <div id="gaugeSub" class="gauge-sub" style="display: none">
+            Comparando vs esperado a hoy
+          </div>
+          <div id="gaugeEmpty" class="empty-inline" style="display: none">
+            <div class="empty-title">Configura tu presupuesto</div>
+            <div class="empty-desc">
+              Define tu presupuesto mensual en el Perfil financiero o activa el
+              modo de ahorro objetivo.
+            </div>
+            <div style="display: flex; gap: 8px; margin-top: 8px">
+              <button id="openProfileFromGauge" class="btn">
+                Ir al Perfil financiero
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal: Distribución de gastos -->
+      <div
+        id="modal-donut"
+        class="modal"
+        aria-hidden="true"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="modal-donut-title"
+      >
+        <div class="modal-backdrop" data-close></div>
+        <div class="modal-content">
+          <button class="modal-close" data-close aria-label="Cerrar">×</button>
+          <h3 id="modal-donut-title">¿Qué muestra la distribución de gastos?</h3>
+          <p>
+            Si nunca has visto una gráfica de “pastel”, piensa en cómo repartes tu dinero en el mes.
+            Cada pedazo representa una <strong>categoría</strong> (comida, arriendo, transporte...).
+            Los pedazos más grandes indican dónde gastas más y dónde conviene enfocar mejoras.
+          </p>
+          <ul>
+            <li><strong>Categoría:</strong> el “tipo” del gasto (ej.: comida).</li>
+            <li><strong>Monto y porcentaje:</strong> al pasar el mouse verás el valor en COP y qué porcentaje representa del total.</li>
+            <li><strong>Qué mirar primero:</strong> elige 2–3 categorías más grandes e intenta bajarlas levemente.</li>
+          </ul>
+          <p>
+            Ejemplo sencillo: si gastas 1.000.000 COP al mes y “Comida” muestra 300.000 COP (30%), intenta reducir 30.000 COP (10%) planificando compras.
+          </p>
+          <div style="display:flex; gap:8px; margin-top:10px">
+            <button class="btn" data-close>Entendido</button>
+            <button class="btn ghost" data-close>Cerrar</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal: Gasto vs Presupuesto -->
+      <div
+        id="modal-gauge"
+        class="modal"
+        aria-hidden="true"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="modal-gauge-title"
+      >
+        <div class="modal-backdrop" data-close></div>
+        <div class="modal-content">
+          <button class="modal-close" data-close aria-label="Cerrar">×</button>
+          <h3 id="modal-gauge-title">
+            ¿Cómo interpretar Gasto vs Presupuesto?
+          </h3>
+          <p>
+            Este indicador es como un velocímetro: compara lo que llevas <strong>gastado</strong> con tu <strong>presupuesto del mes</strong>.
+            Si activas “Proporcional al día”, ajusta lo esperado a la fecha de hoy (útil al inicio del mes para no alarmarte antes de tiempo).
+          </p>
+          <ul>
+            <li><strong>Presupuesto fijo:</strong> usa “Egresos mensuales” del Perfil financiero.</li>
+            <li><strong>Ahorro objetivo:</strong> presupuesto = Ingreso × (1 − % de ahorro).</li>
+            <li><strong>Zonas:</strong> verde 0–70% (bien), amarillo 70–90% (precaución), rojo &gt;90% (riesgo de excederte).</li>
+          </ul>
+          <p><strong>Guía rápida para principiantes</strong></p>
+          <ul>
+            <li>1) Abre el <em>Perfil financiero</em> y completa ingresos, egresos y % de ahorro.</li>
+            <li>2) Registra gastos apenas ocurran (aunque sean pequeños).</li>
+            <li>3) Si entras a zona amarilla, reduce gastos variables (comida fuera, apps, compras impulsivas) por unos días.</li>
+          </ul>
+          <div style="display:flex; gap:8px; margin-top:10px">
+            <button class="btn" id="openProfileFromModal">Ir al Perfil financiero</button>
+            <button class="btn" data-close>Entendido</button>
+            <button class="btn ghost" data-close>Cerrar</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top: 0; margin-bottom: 16px">
+        <h2>Sugerencias para ti</h2>
+        <ul
+          id="insightsList"
+          style="margin: 6px 0 0 18px; line-height: 1.6"
+        ></ul>
+      </div>
+
+      <div class="card" style="margin-top: 16px">
+        <div class="card-header" style="display:flex; align-items:center; justify-content:space-between; gap:8px">
+          <h2>Noticias para ti</h2>
+          <div style="display:flex; gap:8px; align-items:center">
+            <button id="refreshNews" class="btn secondary small">Actualizar</button>
+            <button id="toggleNewsBtn" class="btn ghost small toggle-btn" aria-expanded="true" aria-controls="newsContent">
+              <span class="chev">▾</span>
+              <span class="label">Ocultar</span>
+            </button>
+          </div>
+        </div>
+        <div id="newsContent">
+          <ul id="newsList" class="news-list"></ul>
+          <small style="opacity:.8">Personalizadas según tu perfil financiero · <span id="newsUpdatedAt">Actualizado: —</span></small>
+        </div>
+      </div>
+
+      <div
+        style="
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 16px;
+          margin-top: 16px;
+        "
+      >
+        <div class="card">
+          <h2>Agregar ingreso</h2>
+          <form id="formIncome" class="form">
+            <select id="inc_type" class="input" required>
+              <option value="">Tipo de ingreso</option>
+              <option value="salario">Salario</option>
+              <option value="honorarios">Honorarios</option>
+              <option value="renta">Renta</option>
+              <option value="intereses">Intereses</option>
+              <option value="dividendos">Dividendos</option>
+              <option value="otro">Otro</option>
+            </select>
+            <input
+              id="inc_type_other"
+              class="input"
+              placeholder="Especifica el tipo"
+              style="display: none"
+            />
+
+            <input
+              id="inc_amount"
+              type="number"
+              class="input"
+              placeholder="Monto"
+              required
+            />
+
+            <select id="inc_category" class="input" required>
+              <option value="">Categoría</option>
+              <option value="salario">Salario</option>
+              <option value="freelance">Freelance</option>
+              <option value="inversiones">Inversiones</option>
+              <option value="pasivos">Pasivos</option>
+              <option value="bonos">Bonos</option>
+              <option value="otro">Otro</option>
+            </select>
+            <input
+              id="inc_category_other"
+              class="input"
+              placeholder="Otra categoría"
+              style="display: none"
+            />
+            <input
+              id="inc_date"
+              type="date"
+              class="input"
+              placeholder="Fecha (día)"
+            />
+            <button class="btn" type="submit">Añadir</button>
+          </form>
+        </div>
+        <div class="card">
+          <h2>Agregar gasto</h2>
+          <form id="formExpense" class="form">
+            <select id="exp_type" class="input" required>
+              <option value="">Tipo de gasto</option>
+              <option value="fijo">Fijo</option>
+              <option value="variable">Variable</option>
+              <option value="otro">Otro</option>
+            </select>
+            <input
+              id="exp_type_other"
+              class="input"
+              placeholder="Especifica el tipo"
+              style="display: none"
+            />
+            <input
+              id="exp_amount"
+              type="number"
+              class="input"
+              placeholder="Monto"
+              required
+            />
+            <select id="exp_category" class="input" required>
+              <option value="">Categoría</option>
+              <option value="arriendo">Arriendo</option>
+              <option value="comida">Comida</option>
+              <option value="transporte">Transporte</option>
+              <option value="servicios">Servicios</option>
+              <option value="salud">Salud</option>
+              <option value="educacion">Educación</option>
+              <option value="entretenimiento">Entretenimiento</option>
+              <option value="deudas">Deudas</option>
+              <option value="compras">Compras</option>
+              <option value="impuestos">Impuestos</option>
+              <option value="otro">Otro</option>
+            </select>
+            <input
+              id="exp_category_other"
+              class="input"
+              placeholder="Otra categoría"
+              style="display: none"
+            />
+            <input
+              id="exp_date"
+              type="date"
+              class="input"
+              placeholder="Fecha (día)"
+            />
+            <button class="btn" type="submit">Añadir</button>
+          </form>
+        </div>
+      </div>
+
+      <div
+        style="
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 16px;
+          margin-top: 16px;
+        "
+      >
+        <div class="card">
+          <div class="chart-header">
+            <h2>Resumen tributario</h2>
+            <button
+              class="info-btn"
+              data-modal="modal-tax"
+              title="¿Cómo funciona?"
+            >
+              ⓘ
+            </button>
+          </div>
+          <p>Base gravable estimada: <strong id="taxBase">$0</strong></p>
+          <p>Impuesto estimado: <strong id="taxDue">$0</strong></p>
+          <button id="goTax" class="btn" style="margin-top: 10px">
+            Ir a Declaración de impuestos
+          </button>
+          <small style="color: #888; display: block; margin-top: 5px"
+            >Completa tu información fiscal para ver estimaciones</small
+          >
+          <div
+            id="taxStatus"
+            style="
+              margin-top: 8px;
+              padding: 8px;
+              background: #f0f0f0;
+              border-radius: 4px;
+              font-size: 12px;
+              color: #666;
+              display: none;
+            "
+          >
+            Estado: Sin información fiscal configurada
+          </div>
+        </div>
+        <div class="card notice">
+          <h2>Consejos de IA <span class="badge">Personalizados</span></h2>
+          <ul id="tipsBox" class="tips-list"></ul>
+          <small>Generados a partir de tu perfil y movimientos.</small>
+        </div>
+      </div>
+
+      <!-- Modal: Resumen tributario -->
+      <div
+        id="modal-tax"
+        class="modal"
+        aria-hidden="true"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="modal-tax-title"
+      >
+        <div class="modal-backdrop" data-close></div>
+        <div class="modal-content">
+          <button class="modal-close" data-close aria-label="Cerrar">×</button>
+          <h3 id="modal-tax-title">Resumen tributario en palabras simples</h3>
+          <p>
+            Si no sabes de impuestos, piensa así: primero calculamos tu <strong>base</strong> (de dónde sale el impuesto) y luego aplicamos una <strong>tabla</strong> para estimar cuánto pagar.
+          </p>
+          <ul>
+            <li><strong>Base gravable (estimada):</strong> ingresos del año menos deducciones permitidas. Como guía sencilla usamos un tope de 40% para deducciones totales.</li>
+            <li><strong>UVT:</strong> es una unidad de valor definida por la DIAN. Sirve para expresar los tramos de la tabla de impuestos.</li>
+            <li><strong>Impuesto estimado:</strong> aplicamos una tabla de tramos sobre la base. Si no hay configuración de tramos, usamos un 10% como estimación básica.</li>
+          </ul>
+          <p>
+            ¿Qué debes hacer tú? Completa tu información en “Declaración de impuestos” (ingresos, deducciones, etc.). Entre más completa, mejor será la estimación.
+          </p>
+          <div style="display:flex; gap:8px; margin-top:10px">
+            <button class="btn" id="openTaxFromModal">Ir a Declaración</button>
+            <button class="btn" data-close>Entendido</button>
+            <button class="btn ghost" data-close>Cerrar</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top: 16px">
+        <h2>Movimientos recientes</h2>
+        <table class="table-like">
+          <thead>
+            <tr>
+              <th>Tipo</th>
+              <th>Categoría</th>
+              <th>Monto</th>
+              <th>Fecha</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="recentBody"></tbody>
+        </table>
+      </div>
+
+      <div class="card" style="margin-top: 16px">
+        <div class="card-header" style="display:flex; align-items:center; justify-content:space-between; gap:8px">
+          <h2>Todos los movimientos</h2>
+          <button id="toggleAllMoves" class="btn ghost small toggle-btn" aria-expanded="true" aria-controls="allMovesContent">
+            <span class="chev">▾</span>
+            <span class="label">Ocultar</span>
+          </button>
+        </div>
+        <div id="allMovesContent">
+        <div class="tabs" role="tablist">
+          <button class="tab active" role="tab" aria-selected="true" data-tab="tab-incomes">Ingresos</button>
+          <button class="tab" role="tab" aria-selected="false" data-tab="tab-expenses">Gastos</button>
+        </div>
+        <section id="tab-incomes" class="tab-panel" role="tabpanel">
+          <div style="display:flex; gap:10px; align-items:center; margin:6px 0 8px; flex-wrap:wrap">
+            <input id="incomesSearch" class="input" placeholder="Buscar por tipo o categoría" style="max-width:280px" />
+            <select id="incomesCategoryFilter" class="input" style="max-width:240px">
+              <option value="">Todas las categorías</option>
+            </select>
+            <small style="opacity:0.8">Se aplica el filtro de período del dashboard.</small>
+          </div>
+          <table class="table-like">
+            <thead>
+              <tr>
+                <th>Fecha</th>
+                <th>Tipo</th>
+                <th>Categoría</th>
+                <th>Monto</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="incomesTableBody"></tbody>
+          </table>
+          <div style="display:flex; gap:10px; align-items:center; margin-top:8px">
+            <button class="btn secondary tiny" data-pager="incomes" data-action="prev">Anterior</button>
+            <span id="incomesPageInfo" style="opacity:0.85">Página 1</span>
+            <button class="btn secondary tiny" data-pager="incomes" data-action="next">Siguiente</button>
+          </div>
+        </section>
+        <section id="tab-expenses" class="tab-panel" role="tabpanel" style="display:none">
+          <div style="display:flex; gap:10px; align-items:center; margin:6px 0 8px; flex-wrap:wrap">
+            <input id="expensesSearch" class="input" placeholder="Buscar por tipo o categoría" style="max-width:280px" />
+            <select id="expensesCategoryFilter" class="input" style="max-width:240px">
+              <option value="">Todas las categorías</option>
+            </select>
+            <small style="opacity:0.8">Se aplica el filtro de período del dashboard.</small>
+          </div>
+          <table class="table-like">
+            <thead>
+              <tr>
+                <th>Fecha</th>
+                <th>Tipo</th>
+                <th>Categoría</th>
+                <th>Monto</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="expensesTableBody"></tbody>
+          </table>
+          <div style="display:flex; gap:10px; align-items:center; margin-top:8px">
+            <button class="btn secondary tiny" data-pager="expenses" data-action="prev">Anterior</button>
+            <span id="expensesPageInfo" style="opacity:0.85">Página 1</span>
+            <button class="btn secondary tiny" data-pager="expenses" data-action="next">Siguiente</button>
+          </div>
+        </section>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top: 16px">
+        <h2>Reportes mensuales</h2>
+        <div
+          class="form"
+          style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap"
+        >
+          <input id="report_month" type="month" class="input" required />
+          <button id="downloadReport" class="btn" type="button">
+            Descargar reporte
+          </button>
+        </div>
+        <small
+          >Selecciona un mes para descargar un reporte formal con detalle,
+          totales y resumen.</small
+        >
+      </div>
+
+      <div class="card" id="finProfileCard">
+        <div class="card-header">
+          <h2>Perfil financiero</h2>
+          <button
+            id="toggleFinProfileBtn"
+            class="btn ghost small toggle-btn"
+            title="Mostrar/Ocultar Perfil"
+            aria-label="Mostrar u ocultar sección"
+            aria-expanded="true"
+            aria-controls="finProfileContent"
+          >
+            <span class="chev">▾</span>
+            <span class="label">Ocultar</span>
+          </button>
+        </div>
+        <p class="subtitle">
+          Configura tus ingresos/egresos mensuales objetivo, tolerancia al
+          riesgo y preferencias para obtener recomendaciones personalizadas.
+        </p>
+        <div id="finProfileContent">
+          <form id="finProfileForm" class="form">
+            <div class="grid-3-sm">
+              <input
+                id="monthly_income"
+                class="input"
+                type="number"
+                placeholder="Ingresos mensuales (COP)"
+                required
+              />
+              <input
+                id="monthly_expense"
+                class="input"
+                type="number"
+                placeholder="Egresos mensuales (COP)"
+                required
+              />
+              <input
+                id="savings_percentage"
+                class="input"
+                type="number"
+                min="0"
+                max="80"
+                placeholder="% a ahorrar"
+                required
+              />
+            </div>
+            <div class="grid-3-sm field-group">
+              <select id="goal" class="input" required>
+                <option value="">Objetivo principal</option>
+                <option value="1">Ahorrar para emergencia</option>
+                <option value="2">Comprar vivienda</option>
+                <option value="3">Invertir a largo plazo</option>
+                <option value="4">Reducir deudas</option>
+                <option value="5">Educación / formación</option>
+                <option value="6">Otro</option>
+              </select>
+              <select id="time_horizon" class="input" required>
+                <option value="">Horizonte de tiempo</option>
+                <option value="1">Corto plazo (0-2 años)</option>
+                <option value="2">Mediano plazo (3-5 años)</option>
+                <option value="3">Largo plazo (más de 5 años)</option>
+              </select>
+              <select id="risk_tolerance" class="input" required>
+                <option value="">Tolerancia al riesgo</option>
+                <option value="1">Baja</option>
+                <option value="2">Media</option>
+                <option value="3">Alta</option>
+              </select>
+            </div>
+            <div class="grid-3-sm field-group">
+              <input
+                id="biggest_expense"
+                class="input"
+                placeholder="¿En qué gastas más? (ej: vivienda)"
+              />
+              <select id="has_debt" class="input" required>
+                <option value="">¿Tienes deudas?</option>
+                <option value="false">No</option>
+                <option value="true">Sí</option>
+              </select>
+              <input
+                id="debt_amount"
+                class="input"
+                type="number"
+                placeholder="Monto deuda (si aplica)"
+              />
+            </div>
+            <div class="grid-2 field-group">
+              <input
+                id="debt_type"
+                class="input"
+                placeholder="Tipo deuda (tarjeta, préstamo...)"
+              />
+              <select id="tips_preference" class="input" required>
+                <option value="">Preferencia de tips</option>
+                <option value="1">Ahorro y control de gastos</option>
+                <option value="2">Inversión y crecimiento de capital</option>
+                <option value="3">Tributario / impuestos</option>
+                <option value="4">Educación financiera</option>
+              </select>
+            </div>
+            <div style="display: flex; gap: 12px; margin-top: 8px">
+              <button class="btn" type="submit" id="saveFinProfileBtn">
+                Guardar perfil financiero
+              </button>
+              <button
+                class="btn secondary"
+                type="button"
+                id="editFinProfileBtn"
+                style="display: none"
+              >
+                Editar
+              </button>
+            </div>
+          </form>
+          <div
+            id="finProfileInfo"
+            style="display: none; margin-top: 12px"
+          ></div>
+        </div>
+      </div>
+    </main>
+    
+    <!-- Modal: Editar movimiento (ingreso/egreso) -->
+    <div
+      id="modal-edit-move"
+      class="modal"
+      aria-hidden="true"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="modal-edit-title"
+    >
+      <div class="modal-backdrop" data-close></div>
+      <div class="modal-content" style="max-width:520px">
+        <button class="modal-close" data-close aria-label="Cerrar">×</button>
+        <h3 id="modal-edit-title">Editar movimiento</h3>
+        <p class="subtitle" id="modal-edit-sub">Actualiza el tipo, el monto y la categoría.</p>
+        <form id="editMoveForm" class="form">
+          <input type="hidden" id="edit_kind" />
+          <input type="hidden" id="edit_id" />
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px">
+            <input id="edit_type" class="input" placeholder="Tipo (ej: fijo/salario)" required />
+            <input id="edit_amount" type="number" class="input" placeholder="Monto" required />
+          </div>
+          <input id="edit_category" class="input" placeholder="Categoría (ej: comida)" required />
+          <div style="display:flex; gap:8px; margin-top:8px">
+            <button class="btn" type="submit">Guardar cambios</button>
+            <button class="btn ghost" data-close type="button">Cancelar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <footer class="footer dashboard-footer">© 2025 JERMOX FINANCE — Hecho con 💚</footer>
+    <script type="module" src="./src/dashboard.js"></script>
+    <script type="module" src="./src/chat.js"></script>
+    <!-- Chatbot flotante -->
+    <button id="chatbotToggle" class="chatbot-toggle" title="Abrir chat IA">
+      💬
+    </button>
+    <div id="chatbot" class="chatbot" style="display: none">
+      <header>
+        <span>Asistente IA</span>
+        <button
+          id="chatbotClose"
+          title="Cerrar chat"
+          style="
+            background: none;
+            border: none;
+            color: #eafff5;
+            font-size: 20px;
+            cursor: pointer;
+          "
+        >
+          ×
+        </button>
+      </header>
+      <main id="chatbotMain">
+        <div id="chatbox" class="chatbox"></div>
+      </main>
+      <form
+        id="chatForm"
+        class="chat-input"
+        autocomplete="off"
+        style="padding: 10px 12px 12px 12px; gap: 8px"
+      >
+        <input
+          id="chatInput"
+          type="text"
+          placeholder="Escribe tu pregunta..."
+          autocomplete="off"
+        />
+        <button
+          id="chatSend"
+          type="submit"
+          class="btn"
+          style="padding: 10px 16px; font-size: 16px"
+        >
+          Enviar
+        </button>
+      </form>
+    </div>
+  </body>
+</html>

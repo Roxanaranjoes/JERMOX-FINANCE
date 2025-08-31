@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login • JERMOX</title>
+    <link rel="stylesheet" href="./src/styles.css" />
+  </head>
+
+  <body>
+    <nav class="nav">
+      <div class="brand">
+        <div class="brand-badge"></div>
+        <div>JERMOX FINANCE</div>
+      </div>
+      <div style="text-align: center; margin-top: 16px; opacity: 0.8">
+        <span
+          >¿No tienes cuenta?
+          <a href="register.html" class="link">Regístrate</a></span
+        >
+      </div>
+      <div><a class="btn ghost" href="index.html">← Volver</a></div>
+    </nav>
+    <main class="section" style="max-width: 640px">
+      <div class="card auth-card">
+        <h2>Iniciar sesión</h2>
+        <p class="auth-intro">Accede a tu dashboard para ver tus finanzas y recomendaciones personalizadas.</p>
+        <form id="formLogin" class="form">
+          <input
+            id="email"
+            class="input"
+            type="email"
+            placeholder="Correo"
+            required
+          />
+          <div style="display:flex; gap:8px; align-items:center">
+            <input
+              id="password"
+              class="input"
+              type="password"
+              placeholder="Contraseña"
+              required
+            />
+            <button type="button" class="btn secondary" id="toggleLoginPwd" title="Mostrar/ocultar">👁</button>
+          </div>
+          <div class="auth-actions">
+            <button class="btn" type="submit">Entrar</button>
+            <small class="auth-help">¿Olvidaste tu contraseña? Próximamente recuperación.</small>
+          </div>
+        </form>
+      </div>
+    </main>
+    <script type="module" src="/src/auth.js"></script>
+    <script>
+      const t = document.getElementById('toggleLoginPwd');
+      const p = document.getElementById('password');
+      if (t && p) t.addEventListener('click', ()=>{ p.type = p.type === 'password' ? 'text' : 'password'; });
+    </script>
+  </body>
+</html>

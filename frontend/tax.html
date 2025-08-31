@@ -1,0 +1,119 @@
+<!doctype html><html lang="es"><head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Declaración de impuestos • JERMOX</title>
+<link rel="stylesheet" href="./src/styles.css">
+</head><body>
+<div class="dashboard-nav">
+  <div class="brand"><div class="brand-badge"></div><div>JERMOX FINANCE</div></div>
+  <div style="display:flex;gap:8px;align-items:center">
+    <a class="btn ghost" href="dashboard.html">← Volver al Dashboard</a>
+  </div>
+</div>
+
+<main class="section" style="max-width:1000px">
+  <div class="card">
+    <h2>Declaración de impuestos (Colombia)</h2>
+    <p class="lead">Registra tus totales anuales para estimar la base y el impuesto. Puedes ajustar en cualquier momento.</p>
+    <div class="tabs">
+      <div class="tab active" data-tab="form">Formulario</div>
+      <div class="tab" data-tab="resumen">Resumen</div>
+    </div>
+    <div id="tab-form">
+      <form id="formTax" class="form">
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px">
+          <input id="gross_assets" type="number" class="input" placeholder="Patrimonio bruto (COP)" required />
+          <input id="total_income" type="number" class="input" placeholder="Ingresos del año (COP)" required />
+          <input id="total_expense" type="number" class="input" placeholder="Deducciones/Exentos (COP)" required />
+        </div>
+        <small>Esta estimación es referencial. Consulta DIAN para topes y UVT vigentes.</small>
+        <div style="display:flex;gap:12px">
+          <button class="btn" type="submit">Guardar y calcular</button>
+          <a class="btn secondary" href="https://muisca.dian.gov.co" target="_blank" rel="noreferrer">Ir a DIAN</a>
+        </div>
+      </form>
+    </div>
+    <div id="tab-resumen" style="display:none">
+      <div id="taxOutput"><em>Aún no hay resumen.</em></div>
+    </div>
+  </div>
+</main>
+
+<script type="module">
+import { api } from './src/api';
+import { fmtCOP } from './src/utils';
+
+const user = JSON.parse(localStorage.getItem('user')||'null'); if(!user) location.href='login.html';
+
+// Tabs
+const tabs = document.querySelectorAll('.tab');
+tabs.forEach(t => t.addEventListener('click', ()=>{
+  tabs.forEach(x=>x.classList.remove('active')); t.classList.add('active');
+  const which = t.dataset.tab;
+  document.getElementById('tab-form').style.display = which==='form' ? 'block' : 'none';
+  document.getElementById('tab-resumen').style.display = which==='resumen' ? 'block' : 'none';
+}));
+
+// Submit
+document.getElementById('formTax').addEventListener('submit', async (e)=>{
+  e.preventDefault();
+  const payload = {
+    user_id: user.id,
+    gross_assets: Number(document.getElementById('gross_assets').value),
+    total_income: Number(document.getElementById('total_income').value),
+    total_expense: Number(document.getElementById('total_expense').value)
+  };
+  try {
+    // Guardar registro en tax_info usando la API
+    await api.createTaxInfo(payload);
+  } catch { /* ignore if already exists */ }
+
+  try {
+    const res = await api.taxSummary(user.id);
+    const el = document.getElementById('taxOutput');
+    el.innerHTML = `
+      <p>Base gravable: <strong>${fmtCOP(res.base)}</strong></p>
+      <p>Impuesto estimado: <strong>${fmtCOP(res.impuesto)}</strong></p>
+      <p>Notas: ${res.notas || 'Cálculo estimado con reglas simplificadas.'}</p>
+    `;
+    // Switch to resumen
+    tabs.forEach(x=>x.classList.remove('active')); tabs[1].classList.add('active');
+    document.getElementById('tab-form').style.display='none';
+    document.getElementById('tab-resumen').style.display='block';
+  } catch (err) {
+    console.error('Error al calcular impuestos:', err);
+    // Crear notificación de error
+    const notification = document.createElement('div');
+    notification.style.cssText = `
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: rgba(255,80,80,0.95);
+      border: 1px solid rgba(255,80,80,0.8);
+      color: #fff;
+      padding: 16px 20px;
+      border-radius: 12px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+      z-index: 10000;
+      max-width: 400px;
+    `;
+    notification.innerHTML = `
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <span style="font-size: 18px;">❌</span>
+        <div>
+          <div style="font-weight: 600; margin-bottom: 4px;">Error</div>
+          <div>No se pudo calcular: ${err.message}</div>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(notification);
+    
+    // Auto-remover después de 8 segundos
+    setTimeout(() => {
+      if (notification.parentNode) {
+        notification.parentNode.removeChild(notification);
+      }
+    }, 8000);
+  }
+});
+</script>
+</body></html>

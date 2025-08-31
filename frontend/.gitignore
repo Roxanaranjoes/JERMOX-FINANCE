@@ -1,0 +1,25 @@
+# Dependencias
+/node_modules
+
+# Carpeta de build
+/dist
+
+# Variables de entorno
+.env
+.env.local
+.env.*.local
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Archivos generados por el sistema operativo
+.DS_Store
+Thumbs.db
+
+# Archivos de editor
+.idea
+.vscode

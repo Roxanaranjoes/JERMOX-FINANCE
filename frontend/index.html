@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>JERMOX FINANCE</title>
+    <meta
+      name="description"
+      content="Auxilio financiero y tributario para usar mejor tu dinero"
+    />
+    <link rel="icon" type="image/png" href="./src/Logo_jermox.png" />
+    <link rel="stylesheet" href="./src/styles.css" />
+  </head>
+  <body>
+    <nav class="nav">
+      <div class="brand">
+        <img src="./src/Logo_jermox.png" alt="Jermox" class="brand-logo" />
+        <div>JERMOX FINANCE</div>
+      </div>
+      <div id="nav-links">
+        <div id="nav-links-logged-out" style="display: flex; gap: 12px">
+          <a class="btn ghost" href="login.html">Iniciar sesión</a
+          ><a class="btn" href="register.html">Registrarse</a>
+        </div>
+        <div
+          id="nav-links-logged-in"
+          style="display: none; align-items: center; gap: 12px"
+        >
+          <span id="userNameNav" style="color: #eafff5; opacity: 0.9"></span>
+          <a class="btn" href="dashboard.html">Dashboard</a>
+          <button id="logoutBtnNav" class="btn secondary">Salir</button>
+        </div>
+      </div>
+    </nav>
+    <section class="hero">
+      <div class="card">
+        <h1>Tu dinero, claro y bajo control</h1>
+        <p class="lead">
+          Dashboard inteligente, alertas de gasto, tips con IA y resumen
+          tributario para Colombia.
+        </p>
+        <div class="grid-3">
+          <div class="pill">🔐 Sesión segura</div>
+          <div class="pill">📈 Gráficas en vivo</div>
+          <div class="pill">🤖 Tips con IA</div>
+        </div>
+        <div
+          id="hero-actions-logged-out"
+          style="margin-top: 16px; display: flex; gap: 12px"
+        >
+          <a class="btn" href="register.html">Crear cuenta</a
+          ><a class="btn secondary" href="login.html">Ya tengo cuenta</a>
+        </div>
+        <div
+          id="hero-actions-logged-in"
+          style="display: none; margin-top: 16px"
+        >
+          <a class="btn" href="dashboard.html">Ir a mi Dashboard</a>
+        </div>
+      </div>
+      <div class="carousel">
+        <div class="slide active">
+          <img
+            src="https://images.unsplash.com/photo-1554224155-1696413565d3?q=80&w=1400&auto=format&fit=crop"
+            alt="Finanzas claras"
+          />
+        </div>
+        <div class="slide">
+          <img
+            src="https://www.uts.edu.co/sitio/wp-content/uploads/2020/07/educacio%CC%81n-financiera.jpg"
+            alt="Educación financiera"
+          />
+        </div>
+        <div class="slide">
+          <img
+            src="https://images.unsplash.com/photo-1553729784-e91953dec042?q=80&w=1400&auto=format&fit=crop"
+            alt="Impuestos en Colombia"
+          />
+        </div>
+        <div class="dots">
+          <div class="dot active"></div>
+          <div class="dot"></div>
+          <div class="dot"></div>
+        </div>
+      </div>
+    </section>
+    <section class="section card" id="ratings">
+      <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap">
+        <h2>Opiniones reales</h2>
+        <div style="display:flex; align-items:center; gap:10px">
+          <div id="ratingSummary" class="stars readonly" aria-label="Calificación promedio">
+            <button class="star" aria-hidden="true">★</button>
+            <button class="star" aria-hidden="true">★</button>
+            <button class="star" aria-hidden="true">★</button>
+            <button class="star" aria-hidden="true">★</button>
+            <button class="star" aria-hidden="true">★</button>
+          </div>
+          <div><strong id="ratingAverage">5.0</strong> <small>(<span id="ratingCount">0</span> reseñas)</small></div>
+        </div>
+      </div>
+      <div class="reviews">
+        <ul id="ratingCards" class="reviews-grid"></ul>
+      </div>
+    </section>
+    <section class="section card">
+      <h2>Preguntas frecuentes</h2>
+      <div class="faq">
+        <div class="faq-item">
+          <div class="faq-q"><strong>“No sé por dónde empezar”</strong><span>▾</span></div>
+          <div class="faq-a">
+            <p>Crea tu cuenta, registra 3 gastos reales de esta semana y te mostramos de inmediato dónde ajustar primero. Sin fórmulas ni Excel.</p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q"><strong>“No tengo tiempo para llevar cuentas”</strong><span>▾</span></div>
+          <div class="faq-a">
+            <p>En 5 minutos ves tus categorías más altas y un plan de recorte sencillo (por ejemplo, −10% en comida fuera por 2 semanas).</p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q"><strong>“El dinero se me va sin darme cuenta”</strong><span>▾</span></div>
+          <div class="faq-a">
+            <p>La gráfica de “pastel” te muestra en qué se concentra tu gasto con COP y %. Así detectas fugas y priorizas las 2–3 categorías clave.</p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q"><strong>“Me asustan los impuestos”</strong><span>▾</span></div>
+          <div class="faq-a">
+            <p>Traducimos UVT y tramos a español simple. Te damos un estimado de impuesto para que no haya sorpresas y sepas qué documentos guardar.</p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q"><strong>“Tengo deudas, ¿por dónde empiezo?”</strong><span>▾</span></div>
+          <div class="faq-a">
+            <p>Te sugerimos atacar primero las de mayor interés y liberar flujo gradualmente. Además, verás recomendaciones para evitar nuevas fugas.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="section card" id="glossary">
+      <h2>Glosario básico</h2>
+      <div class="glossary-grid">
+        <div class="glossary-item">
+          <strong>💰 Presupuesto</strong>
+          <p>Plan simple de cuánto puedes gastar en el mes sin pasarte.</p>
+          <em>Ejemplo: si recibes 2.000.000 COP y ahorras 10%, tu presupuesto de gasto es 1.800.000 COP.</em>
+        </div>
+        <div class="glossary-item">
+          <strong>⬆️ Ingreso</strong>
+          <p>Dinero que entra: salario, honorarios, ventas, intereses, etc.</p>
+          <em>Regístralos para ver tu balance real.</em>
+        </div>
+        <div class="glossary-item">
+          <strong>⬇️ Egreso</strong>
+          <p>Dinero que sale: todo lo que pagas en el mes.</p>
+          <em>Verlos juntos te muestra en qué se va tu dinero.</em>
+        </div>
+        <div class="glossary-item">
+          <strong>🏠 Gasto fijo</strong>
+          <p>Pagos que casi no cambian.</p>
+          <em>Ej.: arriendo, servicios básicos, colegio.</em>
+        </div>
+        <div class="glossary-item">
+          <strong>🛒 Gasto variable</strong>
+          <p>Se puede ajustar si lo necesitas.</p>
+          <em>Ej.: comida a domicilio, ocio, compras impulsivas.</em>
+        </div>
+        <div class="glossary-item">
+          <strong>🧯 Fondo de emergencia</strong>
+          <p>Un “colchón” para imprevistos.</p>
+          <em>Meta ideal: 3–6 meses de egresos. Empieza por 1 mes.</em>
+        </div>
+        <div class="glossary-item">
+          <strong>🧾 Base gravable</strong>
+          <p>Parte de tus ingresos sobre la que se calcula el impuesto.</p>
+          <em>Es: ingresos del año − deducciones permitidas.</em>
+        </div>
+        <div class="glossary-item">
+          <strong>📏 UVT</strong>
+          <p>Unidad que usa la DIAN para expresar tramos y topes.</p>
+          <em>Ayuda a entender “en qué rango” tributas.</em>
+        </div>
+      </div>
+    </section>
+    
+    <footer class="footer">© 2025 JERMOX FINANCE — Hecho con 💚</footer>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
