@@ -178,4 +178,4 @@ Development Team:
 
 ---
 
-Hecho con 💚 por Jermox.
+Built with 💚 by JERMOX.
