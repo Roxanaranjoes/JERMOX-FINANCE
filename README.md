@@ -157,6 +157,47 @@ Dentro de la carpeta `jermox-backend-supabase-psql`, puedes usar los siguientes 
 -   **Errores de CORS:** Asegúrate de que `VITE_API_URL` en el `.env` del frontend apunte al puerto correcto del backend (por defecto `http://localhost:3000`).
 -   **La IA no funciona:** Revisa que tu `OPENAI_API_KEY` sea válida y que tengas crédito en tu cuenta de OpenAI.
 
+## Docker (optional)
+
+Local one‑command run:
+```bash
+docker compose up -d --build
+# frontend → http://localhost:8080, backend → http://localhost:3000
+```
+
+Development Team:
+- **Juan Diego Hernandez Martinez** - QA/Integración
+- **José Fernando Ospina García** - Backend Dev
+- **Miguel Angel Molina Gutierrez** - Backend Dev
+- **Jackson Olier Ledezma Murillo** - Frontend Dev
+- **Roxana Naranjo estrada** - Frontend Dev
+
+
+## Design Template
+
+- **Financial app landing page**
+  
+ <img width="1218" height="709" alt="Captura de pantalla 2025-08-31 221415" src="https://github.com/user-attachments/assets/a1575c8d-600d-430e-87d9-6552346e61d3" />
+
+- **User login form**
+  
+<img width="1218" height="718" alt="Captura de pantalla 2025-08-31 221525" src="https://github.com/user-attachments/assets/bd30f8ce-3e84-4710-9761-5eeb2fc1ec91" />
+
+- **Create account form**
+  
+<img width="1219" height="732" alt="Captura de pantalla 2025-08-31 221537" src="https://github.com/user-attachments/assets/09efeade-a55d-4e8f-b8d9-81e40047ce85" />
+
+- **Jermox - finance dashboard**
+  
+<img width="1208" height="757" alt="Captura de pantalla 2025-08-31 221559" src="https://github.com/user-attachments/assets/3506c08b-2ae8-4c8b-960e-f5339cd2260c" />
+<img width="1211" height="760" alt="Captura de pantalla 2025-08-31 221617" src="https://github.com/user-attachments/assets/0c328f8a-170d-46f6-ab9e-ed6ead859685" />
+<img width="1211" height="710" alt="Captura de pantalla 2025-08-31 221626" src="https://github.com/user-attachments/assets/f67585d1-44dc-4db6-a978-a4bd8245b04f" />
+<img width="1210" height="762" alt="Captura de pantalla 2025-08-31 221634" src="https://github.com/user-attachments/assets/6f4bd3e4-da7c-4609-a6d7-a16a5280c39c" />
+<img width="1208" height="761" alt="Captura de pantalla 2025-08-31 221645" src="https://github.com/user-attachments/assets/83d96fe5-cb26-4abe-b7d8-96b91ee7fe3e" />
+<img width="1208" height="764" alt="Captura de pantalla 2025-08-31 221654" src="https://github.com/user-attachments/assets/b8aa5b3b-0504-4176-a84a-36e472e779af" />
+
+---
+
 ---
 
 Hecho con 💚 por Jermox.
