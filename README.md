@@ -150,6 +150,10 @@ Development Team:
 - **Jackson Olier Ledezma Murillo** - Frontend Dev
 - **Roxana Naranjo estrada** - Frontend Dev
 
+## MER
+
+<img width="1549" height="827" alt="MER" src="https://github.com/user-attachments/assets/23283371-47e6-44c1-bc90-493292148864" />
+
 
 ## Design Template
 
